@@ -153,10 +153,11 @@ void extint_mirror(char *buf,size_t size){
 		++buf;
 	}
 }
+//#include <stdio.h>
 size_t extint_ascii(uint64_t *buf,size_t size,const char *chars,uint32_t system,char *outbuf){
 	//size_t s;
 	//uint64_t *m,*q,*swapbuf;
-	uint32_t mod,ds=system,dsn,n=1;
+	uint32_t mod,ds=system,dsn,n;
 	char *out=outbuf;
 	//extint_copy(workspace,buf,size);
 	/*extint_zero(workspace+size,size);
@@ -170,16 +171,40 @@ size_t extint_ascii(uint64_t *buf,size_t size,const char *chars,uint32_t system,
 		m=q;
 		q=swapbuf;
 	}while(s);*/
-	/*for(;;){
+	if(!(64%system)){
+		uint32_t shift=0;
+		uint64_t v,*fin=buf+size-1;
+		while((1ul<<shift)<system)++shift;
+		--system;
+		n=64u>>shift;
+		for(uint64_t *p=buf;p<fin;++p){
+			v=*p;
+			for(dsn=n;dsn;--dsn){
+				*(out++)=chars[v&system];
+				v>>=shift;
+			}
+		}
+		v=*fin;
+		while(v){
+			*(out++)=chars[v&system];
+			v>>=shift;
+		}
+		goto end;
+	}
+
+	for(n=1;;){
 		dsn=ds*system;
 		if(dsn>ds&&!(dsn%ds)){
 			ds=dsn;
 			++n;
 		}
 		else break;
-	}*/
+	}
+	//ds=system;
+	//n=1;
 	for(;;){
 		size=extint_div(buf,size,ds,&mod);
+		//fprintf(stderr,"%u,%u,%u\n",ds,n,mod);
 		if(size){
 			for(dsn=n;dsn;--dsn){
 				*(out++)=chars[mod%system];
@@ -193,6 +218,7 @@ size_t extint_ascii(uint64_t *buf,size_t size,const char *chars,uint32_t system,
 			break;
 		}
 	}
+end:
 	if(out==outbuf)*(out++)=chars[0];
 		//__builtin_printf("sys:%u buf:%lu,%lu\n",system,buf[0],buf[1]);
 	/*for(;;){

@@ -110,15 +110,16 @@ void calfactsum(uint64_t base,uint32_t system){
 	free(ws);
 }
 int main(int argc,char **argv){
+	uint32_t system=16;
 	switch(argc){
 	case 1:
 		puts("pow base exp\npow base");
 		break;
 	case 2:
-		calfact(atoi(argv[1]),10);
+		calfact(atoi(argv[1]),system);
 		break;
 	case 3:
-		calpow(atoi(argv[1]),atoi(argv[2]),10);
+		calpow(atoi(argv[1]),atoi(argv[2]),system);
 		break;
 	}
 }
