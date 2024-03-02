@@ -107,14 +107,16 @@ size_t extint_div(uint64_t *buf,size_t size,uint32_t divisor,uint32_t *mod){
 	do {
 		--p;
 		v=*(uint64_t *)p/divisor;
-		if(!v)continue;
+		//__builtin_printf("q:%lu\n",v);
+		//__builtin_printf("q0:%lu\n",v);
 		//extint_sub((uint64_t *)p,v*divisor);
-		*(uint64_t *)p-=v*divisor;
-		//*(uint64_t *)p%=divisor;
+		//*(uint64_t *)p-=v*divisor;
+		*(uint64_t *)p%=divisor;
 		((uint32_t *)p)[1]=backup;
 		//extint_add((uint64_t *)qp,v);
 		//*(uint32_t *)qp=v;
 		backup=v;
+		if(!v)continue;
 		if(!rsize)rsize=(p-(uint32_t *)buf)+1;
 	}while(p>(uint32_t *)buf);
 	*mod=*(uint32_t *)buf;
@@ -168,15 +170,14 @@ size_t extint_ascii(uint64_t *buf,size_t size,const char *chars,uint32_t system,
 		m=q;
 		q=swapbuf;
 	}while(s);*/
-	for(;;){
+	/*for(;;){
 		dsn=ds*system;
 		if(dsn>ds&&!(dsn%ds)){
 			ds=dsn;
 			++n;
 		}
 		else break;
-	}
-	//__builtin_printf("%u\n",ds);
+	}*/
 	for(;;){
 		size=extint_div(buf,size,ds,&mod);
 		if(size){
@@ -192,6 +193,18 @@ size_t extint_ascii(uint64_t *buf,size_t size,const char *chars,uint32_t system,
 			break;
 		}
 	}
+	if(out==outbuf)*(out++)=chars[0];
+		//__builtin_printf("sys:%u buf:%lu,%lu\n",system,buf[0],buf[1]);
+	/*for(;;){
+		size=extint_div(buf,size,system,&mod);
+		//__builtin_printf("mod:%u buf:%lu,%lu\n",mod,buf[0],buf[1]);
+		if(size){
+			*(out++)=chars[mod];
+		}else {
+			*(out++)=chars[mod];
+			break;
+		}
+	}*/
 	*out=0;
 	size=out-outbuf;
 	return size;
