@@ -1,5 +1,5 @@
 #include <stdint.h>
-
+#include <stddef.h>
 size_t extint_add(uint64_t *buf,uint64_t addend);
 size_t extint_add2(uint64_t *buf,const uint64_t *addend_buf,size_t size);
 size_t extint_sub(uint64_t *buf,uint64_t subtractor);
