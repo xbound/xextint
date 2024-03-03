@@ -110,7 +110,7 @@ void calfactsum(uint64_t base,uint32_t system){
 	free(ws);
 }
 int main(int argc,char **argv){
-	uint32_t system=16;
+	uint32_t system=10;
 	switch(argc){
 	case 1:
 		puts("pow base exp\npow base");
