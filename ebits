@@ -1,0 +1,2 @@
+#! /bin/bash
+../xgraph-front/calc "0->x0,for(n,1,((x0+ln(n))->x0,round(x0/ln10)+1<=$1),(n+1)->n,n)"
